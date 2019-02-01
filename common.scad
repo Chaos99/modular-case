@@ -1,5 +1,5 @@
 // create main enclosure
-module shell(diameter, height, wall_thickness, base) {
+module shell(diameter, height, wall_thickness, base){
 	translate([0, 0, height/2])
 		difference() {
 			cylinder(h = height, d = diameter, center = true);

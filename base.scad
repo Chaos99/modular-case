@@ -1,38 +1,10 @@
 // Creates the enclosure base with space for a PCB and access to its ports.
 
-/* [PCB Dimensions] */
-
-// width of a PCB
-board_width = 26; //[18:Arduino_Nano, 23:Feather_HUZZAH, 26:NodeMCUv2, 30:Raspberry_Pi_ZeroW, 31:NodeMCUv3, 53.3:Arduino_Mega, 53.4:Arduino_Uno]
-// length of a PCB
-board_length = 48; //[45:Arduino_Nano, 48:NodeMCUv2, 51:NodeMCUv3, 51:Feather_HUZZAH, 65:Raspberry_Pi_ZeroW, 68.6:Arduino_Uno, 101.52:Arduino_Mega]
-
-/* [Case Dimensions] */
-
-// diameter of the base
-base_diameter = 62.8; //[62.8:Small, 80:Medium, 100:Large, 130:XLarge]
-// thickness of outer wall
-wall_thickness = 3; //[2:1:5]
-// height of the base
-base_height = 30; //[20:5:100]
-
-/* [Access Port Dimensions] */
-
-// width of the port hole for e.g. USB access
-port_width = 10; //[5:1:50]
-// height of the port hole for e.g. USB access
-port_height = 6; //[4:1:30]
-
-/* [Hidden] */
-
-$fn = 256;
-base_radius = base_diameter / 2;
-
 use <common.scad>
 
 standoff_height = 12;
 standoff_width = wall_thickness;
-ground_clearance = 5;
+ground_clearance = 4;
 
 // a single standoff with a small rest to keep a board from the ground
 // height: overall height; width: wall-thickness and nook,
@@ -109,21 +81,19 @@ module port_access(length, height) {
 		// cut port hole
 		translate([board_length/2 - 1, - length/2, -height/2 + wall_thickness + ground_clearance - 1])
 			cube([50, length, height]);
-	}
-}
+
 
 // main housing of the uC
-module base(base_radius, base_height, wall_thickness, board_length, board_width, port_width, port_height) {
-	port_access(port_width, port_height) {
-		union() {
-			difference() {
+module base(base_radius, base_height, wall_thickness, board_length, board_width, port_width, port_height){
+	port_access(port_width, port_height){
+		union(){
+			difference(){
 				shell(base_radius*2, base_height, wall_thickness, true);
-				venting_holes(0, base_radius, base_height, 10, 5, true);
+				venting_holes(10, 5);
 			};
 
 			// board dummy
-			%translate([-board_length/2, -board_width/2, ground_clearance + wall_thickness])
-				cube([board_length, board_width, 2]);
+			%translate([-board_length/2, -board_width/2, ground_clearance+wall_thickness]) cube([board_length, board_width, 2]);
 
 			standoffs(board_length, board_width, ground_clearance);
 			connectors_female(90, base_radius, base_height, wall_thickness);
@@ -131,5 +101,3 @@ module base(base_radius, base_height, wall_thickness, board_length, board_width,
 		}
 	}
 }
-
-base(base_radius, base_height, wall_thickness, board_length, board_width, port_width, port_height);
