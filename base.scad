@@ -4,7 +4,7 @@ use <common.scad>
 
 standoff_height = 12;
 standoff_width = wall_thickness;
-ground_clearance = 4;
+ground_clearance = 5;
 
 // a single standoff with a small rest to keep a board from the ground
 // height: overall height; width: wall-thickness and nook,
